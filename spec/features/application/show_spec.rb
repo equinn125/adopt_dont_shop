@@ -11,8 +11,10 @@ RSpec.describe 'application show page' do
       status: 'Approved'
       )
       @shelter = Shelter.create!(name: 'Mystery Building', city: 'Irvine CA', foster_program: false, rank: 9)
-      @pet = @shelter.pets.create!(name: 'Henry', age:1, breed: 'Corgi', adoptable: true)
-      @app.pets << @pet
+      @pet_1 = @shelter.pets.create!(name: 'Henry', age:1, breed: 'Corgi', adoptable: true)
+      @pet_2 = @shelter.pets.create!(name: 'Taz', age:4, breed: 'Mutt', adoptable: true)
+      @app.pets << @pet_1
+      @app.pets << @pet_2
   end
   it 'shows the application and its attributes ' do
     visit "/applications/#{@app.id}"
@@ -28,6 +30,7 @@ RSpec.describe 'application show page' do
 
   it 'has a link to the pet show page of each pet the applicant has applied for' do
      visit "/applications/#{@app.id}"
-     expect(page).to have_link("#{@pet.name}")
+     expect(page).to have_link("#{@pet_1.name}")
+     expect(page).to have_link("#{@pet_2.name}")
   end
 end
