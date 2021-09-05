@@ -8,13 +8,12 @@ RSpec.describe 'application show page' do
       state: 'CO',
       zip: 80127,
       reason: 'I like dogs',
-      status: 'Approved'
+      status: 'In Progress'
       )
       @shelter = Shelter.create!(name: 'Mystery Building', city: 'Irvine CA', foster_program: false, rank: 9)
       @pet_1 = @shelter.pets.create!(name: 'Henry', age:1, breed: 'Corgi', adoptable: true)
       @pet_2 = @shelter.pets.create!(name: 'Taz', age:4, breed: 'Mutt', adoptable: true)
-      @app.pets << @pet_1
-      @app.pets << @pet_2
+
   end
   it 'shows the application and its attributes ' do
     visit "/applications/#{@app.id}"
@@ -29,8 +28,23 @@ RSpec.describe 'application show page' do
   end
 
   it 'has a link to the pet show page of each pet the applicant has applied for' do
+    @app.pets << @pet_1
+    @app.pets << @pet_2
      visit "/applications/#{@app.id}"
      expect(page).to have_link("#{@pet_1.name}")
      expect(page).to have_link("#{@pet_2.name}")
+  end
+
+  it 'has a text box to search for specific pets is app has NOT been submitted' do
+    visit "/applications/#{@app.id}"
+    expect(page).to have_content('In Progress')
+    expect(page).to have_button("Search")
+  end
+
+  it 'can list search results for a pet name' do
+    visit "/applications/#{@app.id}"
+    fill_in 'Search', with: 'Henry'
+    click_button('Search')
+    expect(page).to have_content(@pet_1.name)
   end
 end
