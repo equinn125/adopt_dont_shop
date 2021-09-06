@@ -6,11 +6,14 @@
   <li>Applicant State: <%= @application.state %></li>
   <li>Applicant zip: <%= @application.zip %></li>
   <li>Applicant Reason: <%= @application.reason %></li>
-  <li>Applicant Status: <%= @application.status %></li>
+  <li>Pet Applied to:</li>
+    <% @application.pets.each do |pet|%>
+      <ul>
+          <li><%= link_to "#{pet.name}", "/pets/#{pet.id}"  %></li>
+        </ul>
+      <% end %>
+    <li>Applicant Status: <%= @application.status %></li>
 </ul>
-<% @application.pets.each do |pet|%>
-<%= link_to "#{pet.name}", "/pets/#{pet.id}"  %>
-<% end %>
 
 <% if @application.status == "In Progress" %>
 <h3>Add a Pet to your application</h3>
@@ -21,6 +24,10 @@
 <% end %>
 
 <% @pets&.each do |pet| %>
-  <h3>Pet Name <%= pet.name  %> </h3>
+  <ul>
+    <section id="pet-<%=pet.id %>">
+    <li><%= pet.name %><%= button_to "Adopt This Pet", "/applications/#{@application.id}", method: :post, params: {pet_id:"#{pet.id}"} %></li>
+  </section>
+  </ul>
   <% end %>
 <% end %>
