@@ -21,6 +21,10 @@ class ApplicationsController < ApplicationController
     end
   end
 
+  def update
+    
+  end
+
   private
   def application_params
     params.permit(:name, :address, :city, :state, :zip)
