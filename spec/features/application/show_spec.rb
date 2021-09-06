@@ -13,6 +13,7 @@ RSpec.describe 'application show page' do
       @shelter = Shelter.create!(name: 'Mystery Building', city: 'Irvine CA', foster_program: false, rank: 9)
       @pet_1 = @shelter.pets.create!(name: 'Henry', age:1, breed: 'Corgi', adoptable: true)
       @pet_2 = @shelter.pets.create!(name: 'Taz', age:4, breed: 'Mutt', adoptable: true)
+      ApplicationPet.create!(pet: @pet_1, application: @app)
 
   end
   it 'shows the application and its attributes ' do
@@ -46,5 +47,18 @@ RSpec.describe 'application show page' do
     fill_in 'Search', with: 'Henry'
     click_button('Search')
     expect(page).to have_content(@pet_1.name)
+  end
+
+  it 'has a button to adopt this pet' do
+    visit "/applications/#{@app.id}"
+    fill_in 'Search', with: "#{@pet_1.name}"
+    click_button('Search')
+    expect(page).to have_button('Adopt This Pet')
+
+    within "#pet-#{@pet_1.id}" do
+      click_button "Adopt This Pet"
+    end
+    expect(page).to have_link("#{@pet_1.name}")
+    expect(current_path).to eq("/applications/#{@app.id}") 
   end
 end
