@@ -84,4 +84,24 @@ RSpec.describe 'application show page' do
 
     expect(page).to have_content("#{@app_2.reason}")
   end
+
+  it 'can search for partial matches' do
+    visit "/applications/#{@app_1.id}"
+
+    fill_in 'Search', with: 'Ta'
+    click_button('Search')
+    within("#pet-#{@pet_2.id}") do
+      expect(page).to have_content(@pet_2.name)
+    end
+  end
+
+  it 'can do a case insensitive search' do
+    visit "/applications/#{@app_1.id}"
+
+    fill_in 'Search', with: 'TAZ'
+    click_button('Search')
+    within("#pet-#{@pet_2.id}") do
+      expect(page).to have_content(@pet_2.name)
+    end
+  end
 end
