@@ -22,11 +22,14 @@ class ApplicationsController < ApplicationController
   end
 
   def update
-    
+    app = Application.find(params[:id])
+    app.status = "Pending"
+    app.update(application_params)
+    redirect_to "/applications/#{app.id}"
   end
 
   private
   def application_params
-    params.permit(:name, :address, :city, :state, :zip)
+    params.permit(:name, :address, :city, :state, :zip, :reason)
   end
 end

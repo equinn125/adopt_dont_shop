@@ -15,7 +15,6 @@ RSpec.describe 'application show page' do
         city: 'Denver',
         state: 'CO',
         zip: 80127,
-        reason: '' ,
         status: 'In Progress'
         )
       @shelter = Shelter.create!(name: 'Mystery Building', city: 'Irvine CA', foster_program: false, rank: 9)
@@ -79,5 +78,10 @@ RSpec.describe 'application show page' do
     within "#pet-#{@pet_2.id}" do
       click_button "Adopt This Pet"
     end
+    expect(page).to have_button("Submit My Application")
+    fill_in 'Reason', with: 'I love animals'
+    click_button("Submit My Application")
+
+    expect(page).to have_content("#{@app_2.reason}")
   end
 end
