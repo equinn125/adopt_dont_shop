@@ -23,6 +23,14 @@
 <%= form.submit "Search" %>
 <% end %>
 
+<% if @application.pets.count >= 1%>
+<%= form_with url: "/applications/#{@application.id}", method: :patch, local: true do |form| %>
+<%= form.label :reason, 'Reasons'  %>
+<%= form.text_field :reason %>
+<%= form.submit "Submit My Application" %>
+<% end %>
+<% end %>
+
 <% @pets&.each do |pet| %>
   <ul>
     <section id="pet-<%=pet.id %>">
