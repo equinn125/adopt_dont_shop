@@ -8,7 +8,7 @@ RSpec.describe "Admin Shelter Index Page" do
       state: 'CO',
       zip: 80127,
       reason: 'I like dogs',
-      status: 'In Progress'
+      status: 'Pending'
       )
       @app_2 = Application.create!(name: 'Nick',
         address: '123 Main Street',
@@ -27,5 +27,14 @@ RSpec.describe "Admin Shelter Index Page" do
   it 'has shelter names sorted in reverse alphabetical order' do
     visit "/admin/shelters"
     expect(@shelter_2.name).to appear_before(@shelter_1.name)
+  end
+
+  it 'shows all shelters that have pending applications' do
+    visit "/admin/shelters"
+    expect(page).to have_content("Pending Applications")
+
+    within "#pending_applications" do
+      expect(page).to have_content(@shelter_1.name)
+    end
   end
 end
